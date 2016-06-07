@@ -1,2 +1,0 @@
-# letarget
-Test_task
