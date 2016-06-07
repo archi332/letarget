@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-6">
 
-            <?php if (isset($jackets)) : ?>
+            <?php if (isset($items)) : ?>
 
                 <table class="table">
 
@@ -34,11 +34,11 @@
                         <td class="text-center">Описание</td>
                     </tr>
 
-                    <?php foreach ($jackets as $val) : ?>
+                    <?php foreach ($items as $val) : ?>
                         <tr><td> <?php echo $val['name']; ?></td>
                             <td><?php echo $val['description']; ?></td>
-                            <td><a href="<?php echo site_url(). '/main_page/update?table=jakket&id='. $val['id']; ?>" class="btn btn-warning">Изменить</a></td>
-                            <td><a href="<?php echo site_url(). '/main_page/delete?table=jakket&id='. $val['id']; ?>" class="btn btn-danger">Удалить</a></td></tr>
+                            <td><a href="<?php echo site_url(). '/main_page/update?table='. $table. '&id='. $val['id']; ?>" class="btn btn-warning">Изменить</a></td>
+                            <td><a href="<?php echo site_url(). '/main_page/delete?table='. $table. '&id='. $val['id']; ?>" class="btn btn-danger">Удалить</a></td></tr>
                     <?php endforeach; ?>
 
                 </table>

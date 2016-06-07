@@ -34,9 +34,9 @@
     </div>
     <div class="col-md-10">
 
-        <?php if (isset($jackets)) : ?>
+        <?php if (isset($items)) : ?>
 
-            <?php foreach ($jackets as $val) : ?>
+            <?php foreach ($items as $val) : ?>
 
                 <div class="panel panel-default">
 

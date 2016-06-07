@@ -22,12 +22,12 @@ class Main_page extends CI_Controller {
 
 	public function jackets()		//	view table *jackets* on the page
 	{
-		$data ['jackets'] = $this->my_page->Jacket();
+		$data ['items'] = $this->my_page->Jacket();
 		$this->load->view('main',$data);
 	}
 	public function pants()		//	view info table *pants* on the page
 	{
-		$data ['pants'] = $this->my_page->Pants();
+		$data ['items'] = $this->my_page->Pants();
 		$this->load->view('main',$data);
 	}
 	public function admin_panel()		//	view administration page (auth if doesn't have permission)
@@ -40,7 +40,7 @@ class Main_page extends CI_Controller {
 
 				$func = $this->input->get('table');
 
-				$data = ['jackets' => $this->my_page->$func()];
+				$data = ['items' => $this->my_page->$func(), 'table'=>$func];
 				$this->load->view('admin', $data);
 
 			} else {
