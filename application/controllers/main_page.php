@@ -124,7 +124,7 @@ class Main_page extends CI_Controller {
 	{
 		$this->my_page->delPost($this->input->get());
 
-		redirect('/main_page/admin_panel');
+		redirect('main_page/admin_panel');
 	}
 
 	/**
@@ -235,6 +235,7 @@ class Main_page extends CI_Controller {
 		$this->db->update('sub_category', $data);
 		redirect('/main_page/admin_panel');
 	}
+
 	public function delete_sub_cat()
 	{
 		$id['id_cat'] = $this->input->get('id');
@@ -242,19 +243,6 @@ class Main_page extends CI_Controller {
 		$this->db->delete('sub_category', $id);
 		redirect('/main_page/admin_panel');
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * update item

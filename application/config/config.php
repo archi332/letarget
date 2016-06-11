@@ -34,7 +34,7 @@ $config['base_url'] = 'http://artest.loc';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = 'index.php';
 
 /*
 |--------------------------------------------------------------------------

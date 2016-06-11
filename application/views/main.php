@@ -1,7 +1,7 @@
-<?php include 'header.html'; ?>
+<?php include 'header.html';  echo base_url().'<br>'; echo base_url(); ?>
 
 <div align="right">
-            <a class='btn btn-info' href="<?php echo site_url('/main_page/admin_panel'); ?>" title="enter as admin or moderator">admin panel</a>
+            <a class='btn btn-info' href="<?php echo base_url('main_page/admin_panel'); ?>" title="enter as admin or moderator">admin panel</a>
         </div>
 <div class="container" style="margin: 50px 0px 0px 0px ">
     <div class="col-md-2">
@@ -21,7 +21,7 @@
                 <?php foreach ($sub_category as $val) :
                     if($value['id'] == $val['sub_category_id']): ?>
 
-                    <li><a href="<?php echo site_url().'/main_page/index?tab='.$val['id_cat']; ?>">
+                    <li><a href="<?php echo base_url().'main_page/index?tab='.$val['id_cat']; ?>">
                             <?php echo $val['item_category_name']; ?>
                         </a></li>
                 <?php endif; endforeach; ?>

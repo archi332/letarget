@@ -11,19 +11,19 @@
                 <?php foreach ($sub_categories as $val): ?>
                     <tr>
                         <td><?php echo $val['item_category_name']; ?></td>
-                        <td><a class="btn btn-warning" href="<?php echo site_url(). 'main_page/edit_sub_cat?id='.$val['id_cat']; ?>">Edit</a></td>
-                        <td><a class="btn btn-danger" href="<?php echo site_url(). 'main_page/delete_sub_cat?id='.$val['id_cat']; ?>">Delete</a></td>
+                        <td><a class="btn btn-warning" href="<?php echo base_url(). 'main_page/edit_sub_cat?id='.$val['id_cat']; ?>">Edit</a></td>
+                        <td><a class="btn btn-danger" href="<?php echo base_url(). 'main_page/delete_sub_cat?id='.$val['id_cat']; ?>">Delete</a></td>
                     </tr>
                 <?php endforeach; ?>
 
             </table>
-            <a class="btn btn-info" href="<?php echo site_url('main_page/admin_panel') ?>">Вернутся в админку</a>
+            <a class="btn btn-info" href="<?php echo base_url('main_page/admin_panel') ?>">Вернутся в админку</a>
         </div>
 
 
         <?php if(isset($sub_cat_edit)): ?>
             <div class="col-md-3">
-                <form action="<?php echo site_url('main_page/update_sub_cat') ?>" method="post">
+                <form action="<?php echo base_url('main_page/update_sub_cat') ?>" method="post">
                     <div class="form-group">
                         <input type="hidden" name="id_items" value="<?php echo $sub_cat_edit['id_cat']; ?>">
                         <label for="category_name">Название категории:</label>

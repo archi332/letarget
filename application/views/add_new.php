@@ -3,7 +3,7 @@
     <div class="container" style="margin: 50px 0px 50px 0px;">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <form action="<?php echo site_url('main_page/add_new') ?>" method="post">
+            <form action="<?php echo base_url('main_page/add_new') ?>" method="post">
                 <div class="form-group">
                     <label for="item-name">Название товара</label>
                       <input type="text" class="form-control" id="item-name" name="name" required>
@@ -39,7 +39,7 @@
 
                 </div>
                 <button type="submit" class="btn btn-default">Добавить</button>
-                <a class="btn btn-info" href="<?php echo site_url('main_page/admin_panel') ?>">Вернутся в админку</a>
+                <a class="btn btn-info" href="<?php echo base_url('main_page/admin_panel') ?>">Вернутся в админку</a>
             </form>
         </div>
     </div>
