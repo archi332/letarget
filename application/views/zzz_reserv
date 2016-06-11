@@ -1,0 +1,25 @@
+if ($this->getTable()) {
+
+if ($this->getTable() == 'All') {
+
+$arr = $this->my_page->All();
+
+} else {
+
+$arr = $this->db->select()
+->from($this->getTable())
+->order_by('name', $this->getSort())
+->get();
+
+$arr = $arr->num_rows() > 0 ? $arr->result_array() : [];
+}
+
+//			$data = ['items' => $arr, 'table' => $this->getTable()];
+
+$this->load->view('admin', $data);
+
+} else {
+
+$this->load->view('admin',$data);
+}
+}
