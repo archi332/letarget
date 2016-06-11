@@ -5,57 +5,42 @@
         </div>
 <div class="container" style="margin: 50px 0px 0px 0px ">
     <div class="col-md-2">
-        <div><strong>Категории:</strong></div><br>
 
+        <H3>Категории:</H3>
+
+        <?php foreach ($category as $value) : ?>
         <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Обувь
-                <span class="caret"></span>
+        <button class="btn btn-default btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+           <?php echo $value['category_name']; ?>
+            <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li class="disabled"><a href="#">Кроссовки</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="disabled"><a href="#">Туфли</a></li>
-            </ul>
-        </div>
 
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Одежда
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="<?php echo site_url('/main_page/jackets'); ?>">Кофты</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="<?php echo site_url('/main_page/pants'); ?>">Штаны</a></li>
+
+
+                <?php foreach ($sub_category as $val) :
+                    if($value['id'] == $val['sub_category_id']): ?>
+
+                    <li><a href="<?php echo site_url().'/main_page/index?tab='.$val['id_cat']; ?>">
+                            <?php echo $val['item_category_name']; ?>
+                        </a></li>
+                <?php endif; endforeach; ?>
+
             </ul>
         </div>
+        <?php endforeach; ?>
+
+
+
 
     </div>
     <div class="col-md-10">
 
-        <?php if (isset($jackets)) : ?>
 
-            <?php foreach ($jackets as $val) : ?>
 
-                <div class="panel panel-default">
+        <?php if (isset($items)) : ?>
 
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><?php echo $val['name']; ?></h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <?php echo $val['description']; ?>
-                    </div>
-
-                </div>
-            <?php endforeach; ?>
-
-        <?php endif; ?>
-
-        <?php if (isset($pants)) : ?>
-
-            <?php foreach ($pants as $val) : ?>
+            <?php foreach ($items as $val) : ?>
 
                 <div class="panel panel-default">
 
@@ -75,4 +60,11 @@
     </div>
 
 </div>
+
+
+
+
+
+
+
 <?php include 'footer.html'; ?>

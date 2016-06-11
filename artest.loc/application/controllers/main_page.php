@@ -8,16 +8,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
  */
 class Main_page extends CI_Controller {
 
-	/**
-	 * @var string
-	 */
-	public $sort;
-
-	/**
-	 * @var string
-	 */
-	public $table;
-
 
 
 	function __construct()
@@ -28,24 +18,21 @@ class Main_page extends CI_Controller {
 		$this->load->model('my_page');
 
 
-
-		$this->setTable($this->input->get('table'));
-		$this->setSort($this->input->get('sort'));
 	}
+
+	/**
+	 * @return viod
+	 */
 	public function index()		//	index page
 	{
-		$this->load->view('main');
-	}
+		$tab = $this->input->get('tab');
 
-	public function jackets()		//	view table *jackets* on the page
-	{
-		$data ['jackets'] = $this->my_page->Jacket();
-		$this->load->view('main',$data);
-	}
-	public function pants()		//	view info table *pants* on the page
-	{
-		$data ['pants'] = $this->my_page->Pants();
-		$this->load->view('main',$data);
+		if($tab) $data['items'] = $this->db->get_where('items', ['category_id'=>$tab])->result_array();
+
+		$data['category'] = $this->getCategory();
+		$data['sub_category'] = $this->getSubCategory();
+
+		$this->load->view('main', $data);
 	}
 
 	/**
@@ -54,36 +41,43 @@ class Main_page extends CI_Controller {
 	 */
 	public function admin_panel()
 	{
+		$tab = $this->input->get('tab');
+		$cat = $this->input->get('cat');
 
-		if(!$this->input->cookie('username')){
+		if (!$this->input->cookie('username')) {
 			$this->auth();
 			return;
 		}
 
-		if ($this->getTable()) {
-
-			if ($this->getTable() == 'All') {
-
-				$arr = $this->my_page->All();
-
-			} else {
-
-				$arr = $this->db->select()
-						->from($this->getTable())
-						->order_by('name', $this->getSort())
-						->get();
-
-				$arr = $arr->num_rows() > 0 ? $arr->result_array() : [];
-			}
-
-			$data = ['items' => $arr, 'table' => $this->getTable()];
-
-			$this->load->view('admin', $data);
-
-		} else {
-
-			$this->load->view('admin');
+		if ($tab == 'A') {
+			if ($sort = $this->input->get('sort')) $this->db->order_by('name', $sort);
+			$data['items'] = $this->db->get('items')->result_array();
 		}
+
+		if ($tab && is_numeric($tab)) {
+
+			if ($sort = $this->input->get('sort')) $this->db->order_by('name', $sort);
+			$this->db->where("category_id = $tab");
+			$data['items'] = $this->db->get('items')->result_array();
+		}
+
+		if ($cat && is_numeric($cat)) {
+			$data=[];
+
+			$this->db->select('*');
+			$this->db->from('items');
+			$this->db->join('sub_category', 'items.category_id = sub_category.id_cat');
+			if ($sort = $this->input->get('sort')) $this->db->order_by('name', $sort);
+			$this->db->where("sub_category_id = $cat");
+
+			$data['items'] = $this->db->get()->result_array();
+		}
+
+		$data['category'] = $this->getCategory();
+		$data['sub_category'] = $this->getSubCategory();
+
+
+		$this->load->view('admin',$data);
 	}
 
 	/**
@@ -98,7 +92,7 @@ class Main_page extends CI_Controller {
 			$this->load->view('auth.php');
 
 		} else {
-			$data = $this->my_page->check_user($this->input->post('username'),$this->input->post('password'));
+			$data = $this->my_page->check_user($this->input->post('username'), $this->input->post('password'));
 
 			if ($data) {
 				$this->my_page->loginUser($data);
@@ -145,9 +139,122 @@ class Main_page extends CI_Controller {
 
 			redirect('/main_page/admin_panel');
 		} else {
-			$this->load->view('add_new');
+
+			$data['cat'] = $this->getCategory();
+			$data['sub_cat'] = $this->getSubCategory();
+
+			$this->load->view('add_new', $data);
 		}
 	}
+
+	/**
+	 * add category
+	 * @return void
+	 */
+	public function add_cat()
+	{
+		if ($data = $this->input->post('name')) {
+			$this->my_page->addCatalog($data);
+			redirect('/main_page/admin_panel');
+		} else {
+			$this->load->view('add_cat');
+		}
+	}
+
+	/**
+	 * add sub Category
+	 * @return void
+	 */
+	public function add_sub_cat()
+	{
+		if ($this->input->post('name')) {
+
+			$this->my_page->addSubCatalog($this->input->post());
+
+			redirect('/main_page/admin_panel');
+		} else {
+			$data['categories'] = $this->getCategory();
+			$this->load->view('add_sub_cat', $data);
+		}
+	}
+
+
+	public function edit_cat()
+	{
+		if ($id =  $this->input->get('id')) {
+
+			$data['cat_edit'] = $this->db->get_where('category', ['id'=>$id])->row_array();
+
+		}
+			$data['categories'] = $this->db->get('category')->result_array();
+
+		$this->load->view('form_edit_categories', $data);
+	}
+
+	public function update_cat()
+	{
+		$data = ['category_name' => $this->input->post('category_name')];
+
+		$id = $this->input->post('id_items');
+
+		$this->db->where('id', $id);
+		$this->db->update('category', $data);
+
+		redirect('/main_page/admin_panel');
+	}
+	public function delete_cat()
+	{
+		$id['id'] = $this->input->get('id');
+		$this->db->delete('category', $id);
+		redirect('/main_page/admin_panel');
+	}
+
+
+
+	public function edit_sub_cat()
+	{
+		if ($id =  $this->input->get('id')) {
+
+			$data['sub_cat_edit'] = $this->db->get_where('sub_category', ['id_cat'=>$id])->row_array();
+			$data['category'] = $this->getCategory();
+
+		}
+		$data['sub_categories'] = $this->getSubCategory();
+
+		$this->load->view('form_edit_sub_categories', $data);
+	}
+
+	public function update_sub_cat()
+	{
+		$data = ['item_category_name' => $this->input->post('category_name'),
+				'sub_category_id' => $this->input->post('id_items')];
+
+		$id = $this->input->post('id_items');
+
+		$this->db->where('id_cat', $id);
+		$this->db->update('sub_category', $data);
+		redirect('/main_page/admin_panel');
+	}
+	public function delete_sub_cat()
+	{
+		$id['id_cat'] = $this->input->get('id');
+
+		$this->db->delete('sub_category', $id);
+		redirect('/main_page/admin_panel');
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * update item
@@ -162,43 +269,34 @@ class Main_page extends CI_Controller {
 			redirect('/main_page/admin_panel');
 
 		} else {
-			$data = $this->input->get();
 
-			$full = $this->my_page->formEdit($data);
+			$data = $this->my_page->formEdit($this->input->get());
 
-			$this->load->view('form_update', $full);
+			$data['cat'] = $this->getCategory();
+			$data['sub_cat'] = $this->getSubCategory();
+
+			$this->load->view('form_update', $data);
 		}
 	}
 
+
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function getSort()
+	public function getCategory()
 	{
-		return $this->sort;
+		$data = $this->db->get('category')->result_array();
+
+		return $data;
 	}
 
 	/**
-	 * @param string $sort
+	 * @return array
 	 */
-	public function setSort($sort)
+	public function getSubCategory()
 	{
-		$this->sort = $sort ?: 'asc';
-	}
+		$data = $this->db->get('sub_category')->result_array();
 
-	/**
-	 * @return string
-	 */
-	public function getTable()
-	{
-		return $this->table;
-	}
-
-	/**
-	 * @param string $table
-	 */
-	public function setTable($table)
-	{
-		$this->table = $table;
+		return $data;
 	}
 }

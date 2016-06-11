@@ -12,36 +12,6 @@ class my_page extends CI_Model
     }
 
     /**
-     * @return array
-     */
-    public function Jacket()
-    {
-        $arr = $this->db->get('Jacket');
-        return $arr->num_rows() > 0 ? $arr->result_array() : [];
-    }
-
-    /**
-     * @return array
-     */
-    public function Pants()
-    {
-        $arr = $this->db->get('Pants');
-        return $arr->num_rows() > 0 ? $arr->result_array() : [];
-    }
-
-    /**
-     * @return array
-     */
-    public function All()
-    {
-
-        $sort = new Main_page();
-        $all = $this->db->query("SELECT * FROM Jacket UNION SELECT * FROM Pants ORDER BY `name` {$sort->getSort()}")->result_array();
-        return $all;
-
-    }
-
-    /**
      * @param string $name
      * @param string $pass
      * @return mixed
@@ -71,13 +41,12 @@ class my_page extends CI_Model
      */
     public function editPost($data)
     {
-        $table = $data['table'];
-        $id = $data['id'];
+        $id = $data['id_items'];
 
-        $data = ['name'=> $data['name'], 'description'=>$data['description']];
+        $data = ['name'=> $data['name'], 'description'=>$data['description'], 'category_id'=>$data['sub_cat_id']];
 
-        $this->db->where('id', $id);
-        $this->db->update($table, $data);
+        $this->db->where('id_items', $id);
+        $this->db->update('items', $data);
     }
 
     /**
@@ -86,18 +55,11 @@ class my_page extends CI_Model
      */
     public function formEdit($data)
     {
-
-        $table = $data['table'];
-
         $id = $data['id'];
 
-        $vals = ['table' => $table, 'id' => $id];
+        $data = $this->db->get_where('items', ['id_items'=>$id])->row_array();
 
-        $data = $this->db->get_where($table, ['id'=>$id])->result_array();
-
-        $full = array_merge($vals,$data[0]);
-
-        return $full;
+        return $data;
     }
 
     /**
@@ -106,9 +68,10 @@ class my_page extends CI_Model
     public function addPost($data)
     {
         $data = [ 'name' => $this->input->post('name'),
-            'description' => $this->input->post('description')];
+            'description' => $this->input->post('description'),
+            'category_id' => $this->input->post('sub_cat_id')];
 
-        $this->db->insert($this->input->post('table'), $data);
+        $this->db->insert('items', $data);
     }
 
     /**
@@ -116,6 +79,30 @@ class my_page extends CI_Model
      */
     public function delPost($data)
     {
-        $this->db->delete($data['table'],['id'=>$data['id']]);
+        $this->db->delete('items',['id_items'=>$data['id']]);
+    }
+
+    /**
+     * add category
+     * @param $data
+     * @return void
+     */
+    public function addCatalog($data)
+    {
+        $this->db->insert('category', ['category_name'=>$data]);
+    }
+
+    /**
+     * add subCatalog
+     * @param $data
+     * @return void
+     */
+    public function addSubCatalog($data)
+    {
+
+        $data = [ 'item_category_name' => $data['name'],
+                'sub_category_id' => $data['cat_id']];
+
+        $this->db->insert('sub_category', $data);
     }
 }

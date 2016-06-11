@@ -6,7 +6,7 @@
             <form action="<?php echo site_url('main_page/add_new') ?>" method="post">
                 <div class="form-group">
                     <label for="item-name">Название товара</label>
-                    <input type="text" class="form-control" id="item-name" name="name" required>
+                      <input type="text" class="form-control" id="item-name" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="item-desc">Описание товара</label>
@@ -14,10 +14,29 @@
                 </div>
                 <div class="form-group">
                     <label for="table">Выберите категорию:</label>
-                    <select class="form-control" name="table">
-                        <option value="Jacket">Кофты</option>
-                        <option value="Pants">Штаны</option>
+
+                    <select class="form-control" name="sub_cat_id">
+
+                        <?php
+
+
+                        foreach($cat as $value){
+                            echo '<option disabled>'.$value['category_name']. '</option>';
+
+                            foreach($sub_cat as $val) :
+
+                                if ($value['id'] == $val['sub_category_id']) : ?>
+                                    <option value="<?php echo $val['id_cat']; ?>">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $val['item_category_name']; ?>
+                                    </option>
+                                <?php endif; ?>
+
+                            <?php endforeach;
+
+                        } ?>
+
                     </select>
+
                 </div>
                 <button type="submit" class="btn btn-default">Добавить</button>
                 <a class="btn btn-info" href="<?php echo site_url('main_page/admin_panel') ?>">Вернутся в админку</a>
@@ -27,4 +46,5 @@
 
 
 
-<?php include 'footer.html';
+
+<?php include 'footer.html'; ?>
